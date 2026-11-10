@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multimídia Automotiva</title>
+<style>
+:root{--s1:#c8ecff;--s2:#72baf0;--card:#ffffffcc;--ink:#0b2e4f;--mute:#4f7394;--acc:#1796f0;--neon:#35f0e0;--bar:#2f93e6;--bz:#0e1012}
+:root[data-theme="night"]{--s1:#16345f;--s2:#0a1730;--card:#17284acc;--ink:#e3f2ff;--mute:#8fb0d4;--acc:#35b4ff;--bar:#12306a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Roboto,system-ui,sans-serif;background:#1b1d20;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:12px;color:var(--ink)}
+button{all:unset;cursor:pointer;box-sizing:border-box}
+button:focus-visible,[tabindex]:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid #ffd24a;outline-offset:2px}
+.ic{width:22px;height:22px;fill:currentColor;flex:none}
+.side{display:flex;flex-direction:column;align-items:center;gap:8px}
+.pb{width:62px;height:40px;border-radius:9px;background:#23262a;border:1px solid #34383d;color:#e8eaed;font-size:11px;font-weight:600;display:grid;place-items:center;letter-spacing:.04em}
+.pb:active{background:#3a3f45}
+.pb.sm{height:24px;font-size:9px;width:46px}
+.knob{width:58px;height:58px;border-radius:50%;margin-top:14px;background:conic-gradient(#555,#222,#666,#222,#555);border:3px solid #3b3f44;position:relative;touch-action:none}
+.knob::after{content:"";position:absolute;left:50%;top:5px;width:4px;height:12px;margin-left:-2px;background:#e8eaed;border-radius:2px}
+.kl{font-size:9px;color:#9aa0a6}
+.bezel{width:100%;max-width:620px;background:var(--bz);border-radius:34px;padding:18px 12px;display:grid;grid-template-columns:72px 1fr 72px;gap:8px;align-items:center}
+.screen{height:min(660px,calc(100vh - 40px));min-height:560px;border-radius:16px;overflow:hidden;position:relative;display:grid;grid-template-rows:30px 1fr 64px;background:linear-gradient(180deg,var(--s1),var(--s2))}
+.sb{display:flex;justify-content:space-between;align-items:center;padding:0 10px;font-size:13px;font-weight:600;z-index:2}
+.sb span,.sb button{display:flex;align-items:center;gap:6px}
+.sb .ic{width:16px;height:16px}
+#sbBt.off{opacity:.35}
+main{position:relative;min-height:0}
+.pg{position:absolute;inset:0;display:none;flex-direction:column;min-height:0}
+.pg.on{display:flex}
+.scene{flex:1.1;min-height:0}
+.scene svg{width:100%;height:100%;display:block}
+.wrow{display:flex;gap:7px;padding:0 8px;height:150px}
+.wcol{display:flex;flex-direction:column;gap:5px;width:62px}
+.wcol button,.wcard{background:var(--card);border-radius:12px;backdrop-filter:blur(6px)}
+.wcol button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;gap:2px}
+.wcard{flex:1;padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;min-width:0}
+.an{width:62px;height:62px}
+.dig{font-size:26px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.dt{font-size:10px;color:var(--mute);text-align:center}
+.art{width:50px;height:50px;border-radius:10px;background:linear-gradient(135deg,#102a5c,#1796f0);display:grid;place-items:center}
+.eq{display:flex;gap:3px;align-items:flex-end;height:22px}
+.eq i{width:4px;height:8px;background:#fff;border-radius:2px}
+.on-air .eq i{animation:eq .9s ease-in-out infinite alternate}
+.eq i:nth-child(2){animation-delay:.2s!important}.eq i:nth-child(3){animation-delay:.4s!important}.eq i:nth-child(4){animation-delay:.1s!important}
+@keyframes eq{to{height:22px}}
+.rt{font-size:13px;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.rs{font-size:10px;color:var(--mute)}
+.rc{display:flex;gap:10px;align-items:center}
+.rc button,.rbtn{width:30px;height:30px;display:grid;place-items:center;border-radius:50%}
+.rc .pp,.pp{background:var(--acc);color:#fff;width:34px;height:34px;box-shadow:0 0 0 4px #1796f033}
+.dock{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px 6px 6px;align-items:end;height:84px}
+.dock button,.apps button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--ink)}
+.dock .bub,.apps .bub{width:36px;height:36px;border-radius:50%;background:var(--card);display:grid;place-items:center;color:var(--acc)}
+.dock .mid .bub{width:48px;height:48px;background:var(--acc);color:#fff;box-shadow:0 0 14px #1796f099}
+.bar{background:var(--bar);display:grid;grid-template-columns:54px 1fr 54px;align-items:center;color:#fff;z-index:2}
+.bar .col{display:flex;flex-direction:column;align-items:center;justify-content:space-around;height:100%;padding:4px 0}
+.bar .col button{width:44px;height:26px;display:grid;place-items:center;border-radius:8px;position:relative}
+.bar .col button:active{background:#ffffff33}
+.bar .col button.vb{display:flex;gap:2px;font-weight:700;font-size:14px;align-items:center;justify-content:center}
+.bar .vb .ic{width:18px;height:18px}
+#btText{text-align:center;font-size:15px;font-weight:500}
+.hd{display:flex;align-items:center;gap:8px;padding:6px 10px;font-size:18px;font-weight:700}
+.hd button{width:36px;height:36px;border-radius:50%;background:var(--card);display:grid;place-items:center}
+.body{flex:1;overflow:auto;padding:6px 14px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.panel{background:var(--card);border-radius:14px;padding:14px}
+.btn{background:var(--acc);color:#fff;border-radius:10px;padding:11px 14px;text-align:center;font-weight:600;font-size:14px;display:block;text-decoration:none}
+.btn.alt{background:var(--card);color:var(--ink)}
+.row{display:flex;gap:8px;align-items:center;justify-content:center}
+.big{font-size:44px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.sub{text-align:center;color:var(--mute);font-size:13px}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.pre{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pre button,.list button,.seg button{background:#ffffff88;border-radius:10px;padding:10px;text-align:center;font-weight:600;font-size:14px}
+.pre button[aria-pressed="true"],.list button[aria-pressed="true"],.seg button[aria-pressed="true"]{background:var(--acc);color:#fff}
+.list{display:flex;flex-direction:column;gap:6px}
+.list button{text-align:left;display:flex;justify-content:space-between}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pad button{background:var(--card);border-radius:12px;height:46px;display:grid;place-items:center;font-size:22px;font-weight:600}
+.pad button:active{background:var(--acc);color:#fff}
+.cover{width:140px;height:140px;border-radius:16px;margin:0 auto;background:linear-gradient(135deg,#e91e63,#1796f0);display:grid;place-items:center;color:#fff}
+.cover .ic{width:56px;height:56px}
+.prog{height:5px;background:#ffffff88;border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--acc);width:0}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 4px}
+.apps .bub{width:52px;height:52px}
+iframe{width:100%;flex:1;min-height:240px;border:0;border-radius:12px;background:#dde}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sw{display:flex;justify-content:space-between;align-items:center;font-weight:600}
+.sw button{width:48px;height:26px;border-radius:13px;background:#9ab;position:relative}
+.sw button[aria-pressed="true"]{background:var(--acc)}
+.sw button::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}
+.sw button[aria-pressed="true"]::after{left:25px}
+.toast{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);background:#0b1a2ef0;color:#fff;border-radius:12px;padding:12px 20px;font-size:17px;font-weight:600;z-index:6;max-width:86%;text-align:center}
+.toast[hidden]{display:none}
+.off{position:absolute;inset:0;background:#000;z-index:9;display:none;align-items:center;justify-content:center;color:#456;font-size:13px}
+.off.on{display:flex}
+@media (max-width:520px){.bezel{grid-template-columns:54px 1fr 54px;padding:12px 6px;border-radius:24px}.pb{width:48px;font-size:9px}.knob{width:46px;height:46px}.pb.sm{width:38px}}
+#sbSn{display:none;color:#ff5a5f;font-size:11px}
+#sbSn.on{display:flex}
+.cams{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cam{height:84px;border-radius:12px;background:linear-gradient(160deg,#0f1f33,#16314f);position:relative;overflow:hidden;color:#cfe8ff;font-size:12px;font-weight:600}
+.cam span{position:absolute;left:8px;bottom:6px}
+.cam em{position:absolute;right:8px;top:6px;font-style:normal;font-size:10px;color:#ff6b6b;display:none}
+.armed .cam em{display:block}
+.cam::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:#35f0e066;display:none}
+.armed .cam::after{display:block}
+.cam.alert{outline:3px solid #ff4d4d;outline-offset:-3px}
+.alertbar{background:#e5484d;color:#fff;border-radius:12px;padding:12px;font-weight:700;text-align:center;font-size:14px}
+@media (prefers-reduced-motion:no-preference){.armed .cam::after{animation:scan 2.500s linear infinite}@keyframes scan{to{top:100%}}}
+@media (prefers-reduced-motion:reduce){.on-air .eq i,.lane{animation:none!important}}
+@media (prefers-reduced-motion:no-preference){.lane{animation:lane 1s linear infinite}@keyframes lane{to{stroke-dashoffset:-24}}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M20 11H7.800l5.600-5.600L12 4l-8 8 8 8 1.400-1.400L7.800 13H20z"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.600 10.800a15 15 0 006.600 6.600l2.200-2.200a1 1 0 011-.2c1.100.4 2.300.6 3.600.6a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.500a1 1 0 011 1c0 1.200.2 2.400.6 3.600a1 1 0 01-.3 1z"/></symbol>
+<symbol id="i-bt" viewBox="0 0 24 24"><path d="M17.700 7.700L12 2h-1v7.600L6.400 5 5 6.400 10.600 12 5 17.600 6.400 19l4.600-4.600V22h1l5.700-5.700-4.300-4.300 4.300-4.300zM13 5.800l1.900 1.900L13 9.600zm1.900 10.500L13 18.200v-3.800z"/></symbol>
+<symbol id="i-music" viewBox="0 0 24 24"><path d="M12 3v10.600A4 4 0 1014 17V7h4V3z"/></symbol>
+<symbol id="i-video" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1zm6 3.500v7l6-3.500z"/></symbol>
+<symbol id="i-set" viewBox="0 0 24 24"><path d="M4 7h9V5h2v2h5v2h-5v2h-2V9H4zm0 8h5v-2h2v2h9v2H11v2H9v-2H4z"/></symbol>
+<symbol id="i-nav" viewBox="0 0 24 24"><path d="M12 2L4.500 20.300l.7.700L12 18l6.800 3 .7-.7z"/></symbol>
+<symbol id="i-radio" viewBox="0 0 24 24"><path d="M3.200 6.200A2 2 0 002 8v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2H8.300l8.300-3.300L15.900 1zM7 20a3 3 0 110-6 3 3 0 010 6zm13-8h-2v-2h-2v2H4V8h16z"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></symbol>
+<symbol id="i-prev" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.500 6l8.500 6V6z"/></symbol>
+<symbol id="i-next" viewBox="0 0 24 24"><path d="M6 18l8.500-6L6 6zm10-12v12h2V6z"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></symbol>
+<symbol id="i-vol" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9zm13.500 3A4.500 4.500 0 0014 8v8a4.500 4.500 0 002.500-4z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M12 4.500C7 4.500 2.700 7.600 1 12c1.700 4.400 6 7.500 11 7.500s9.300-3.100 11-7.500c-1.700-4.400-6-7.500-11-7.500zM12 17a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/></symbol>
+<symbol id="i-pow" viewBox="0 0 24 24"><path d="M11 3h2v10h-2zm5.600 2.400A8 8 0 1112 4v2a6 6 0 105.200 3z"/></symbol>
+</defs></svg>
+
+<div class="bezel">
+ <div class="side" aria-label="Botões esquerdos">
+  <button class="pb sm" data-k="mic">MIC</button>
+  <button class="pb" data-k="menu">MENU</button>
+  <button class="pb" data-k="phone">PHONE</button>
+  <button class="pb" data-k="back">BACK</button>
+  <button class="pb" data-k="navi">NAVI</button>
+  <div class="knob" id="kv" role="slider" tabindex="0" aria-label="Volume (arraste, role o mouse ou clique para mudo)"></div><span class="kl">PWR·VOL</span>
+ </div>
+
+ <div class="screen" id="screen">
+  <div class="sb">
+   <button id="pw" aria-label="Desligar a tela"><svg class="ic"><use href="#i-pow"/></svg></button>
+   <span><span id="sbSn">● REC</span><span>11,8V</span><span id="sbBt"><svg class="ic"><use href="#i-bt"/></svg></span><b id="sbT">--:--</b></span>
+  </div>
+
+  <main>
+   <section class="pg on" id="p-home">
+    <div class="scene">
+     <svg viewBox="0 0 340 230" preserveAspectRatio="xMidYMid slice" aria-label="Carro na estrada iluminada">
+      <defs><linearGradient id="rd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#35f0e0" stop-opacity=".2"/><stop offset="1" stop-color="#35f0e0" stop-opacity=".95"/></linearGradient></defs>
+      <path d="M0 140Q60 90 130 120T260 100T340 120V230H0z" fill="#fff" opacity=".55"/>
+      <path d="M0 175Q80 130 170 160T340 150V230H0z" fill="#fff" opacity=".8"/>
+      <path d="M150 20L190 20L300 230H40z" fill="url(#rd)"/>
+      <path class="lane" d="M170 20L170 230" stroke="#fff" stroke-width="3" stroke-dasharray="12 12" opacity=".9"/>
+      <g transform="translate(170 150)"><rect x="-27" y="-34" width="54" height="76" rx="18" fill="#f4f7fa" stroke="#9db6cc"/><rect x="-20" y="-20" width="40" height="22" rx="8" fill="#26384c"/><rect x="-20" y="8" width="40" height="14" rx="6" fill="#26384c"/><rect x="-22" y="36" width="12" height="4" rx="2" fill="#ff4d4d"/><rect x="10" y="36" width="12" height="4" rx="2" fill="#ff4d4d"/></g>
+     </svg>
+    </div>
+    <div class="wrow">
+     <div class="wcol" id="wcol"></div>
+     <div class="wcard">
+      <svg class="an" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#9db6cc" stroke-width="2"/><g stroke="#4f7394" stroke-width="2"><path d="M50 5v7M50 88v7M5 50h7M88 50h7"/></g><line id="hh" x1="50" y1="50" x2="50" y2="28" stroke="#0b2e4f" stroke-width="4" stroke-linecap="round"/><line id="mh" x1="50" y1="50" x2="50" y2="16" stroke="#0b2e4f" stroke-width="3" stroke-linecap="round"/><line id="sh" x1="50" y1="56" x2="50" y2="12" stroke="#e5484d" stroke-width="1.500"/><circle cx="50" cy="50" r="3" fill="#e5484d"/></svg>
+      <div class="dig" id="dig">--:--</div><div class="dt" id="dt"></div>
+     </div>
+     <div class="wcard" id="rcard">
+      <div class="art"><span class="eq"><i></i><i></i><i></i><i></i></span></div>
+      <div><div class="rt" id="rt">Rádio</div><div class="rs" id="rs" style="text-align:center"></div></div>
+      <div class="rc">
+       <button data-act="prev" aria-label="Anterior"><svg class="ic"><use href="#i-prev"/></svg></button>
+       <button class="pp" data-act="play" aria-label="Tocar"><svg class="ic"><use href="#i-play"/></svg></button>
+       <button data-act="next" aria-label="Próxima"><svg class="ic"><use href="#i-next"/></svg></button>
+      </div>
+     </div>
+    </div>
+    <div class="dock" id="dock"></div>
+   </section>
+
+   <section class="pg" id="p-apps"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Aplicativos</div><div class="body"><div class="apps" id="appgrid"></div></div></section>
+
+   <section class="pg" id="p-radio"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Rádio</div>
+    <div class="body">
+     <div class="panel"><div class="sub" id="band">FM</div><div class="big" id="freq">98,5</div><div class="sub" id="unit">MHz</div>
+      <div class="row" style="margin:10px 0"><button class="rbtn" data-act="tm" aria-label="Sintonizar abaixo"><svg class="ic"><use href="#i-prev"/></svg></button><button class="pp" data-act="play" aria-label="Tocar"><svg class="ic"><use href="#i-play"/></svg></button><button class="rbtn" data-act="tp" aria-label="Sintonizar acima"><svg class="ic"><use href="#i-next"/></svg></button></div>
+      <input type="range" id="fr" aria-label="Frequência"></div>
+     <div class="seg"><button data-band="FM" aria-pressed="true">FM</button><button data-band="AM" aria-pressed="false">AM</button></div>
+     <div class="pre" id="pre"></div>
+     <button class="btn alt" id="save">Salvar estação em uma memória</button>
+    </div></section>
+
+   <section class="pg" id="p-music"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Música</div>
+    <div class="body">
+     <div class="cover"><svg class="ic"><use href="#i-music"/></svg></div>
+     <div><div class="big" style="font-size:22px" id="mt">—</div><div class="sub" id="ma"></div></div>
+     <div class="prog"><i id="mbar"></i></div>
+     <div class="row"><button class="rbtn" data-act="prev" aria-label="Anterior"><svg class="ic"><use href="#i-prev"/></svg></button><button class="pp" data-act="play" aria-label="Tocar"><svg class="ic"><use href="#i-play"/></svg></button><button class="rbtn" data-act="next" aria-label="Próxima"><svg class="ic"><use href="#i-next"/></svg></button></div>
+     <div class="list" id="tl"></div>
+     <a class="btn alt" href="https://music.youtube.com" target="_blank" rel="noopener">Abrir YouTube Music</a>
+    </div></section>
+
+   <section class="pg" id="p-nav"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Navegação</div>
+    <div class="body">
+     <div class="row"><input id="dest" type="search" placeholder="Para onde?" aria-label="Destino" style="flex:1;padding:10px;border-radius:10px;border:0;font-size:15px"><button class="btn" id="go" style="padding:10px 16px">Ir</button></div>
+     <iframe id="map" title="Mapa" loading="lazy" allowfullscreen></iframe>
+     <a class="btn alt" id="gm" target="_blank" rel="noopener" href="https://www.google.com/maps">Abrir no Google Maps</a>
+    </div></section>
+
+   <section class="pg" id="p-bt"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Bluetooth</div>
+    <div class="body">
+     <div class="panel sw">Bluetooth<span>Sempre ligado</span></div>
+     <div class="sub" id="btinfo"></div>
+     <div class="list" id="dev"></div>
+     <button class="btn alt" id="scan">Buscar dispositivos</button>
+    </div></section>
+
+   <section class="pg" id="p-phone"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Telefone</div>
+    <div class="body">
+     <div class="panel"><div class="big" style="font-size:30px;min-height:40px" id="num"></div><div class="sub" id="cst">Digite um número</div></div>
+     <div class="pad" id="pad"></div>
+     <div class="row"><button class="btn" id="call" style="flex:1;background:#2fb457">Ligar</button><button class="btn" id="hang" style="flex:1;background:#e5484d">Desligar</button></div>
+    </div></section>
+
+   <section class="pg" id="p-video"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Vídeos</div>
+    <div class="body"><div class="panel sub">Nenhum vídeo encontrado. Conecte um pen drive com arquivos de vídeo.</div><a class="btn alt" href="https://www.youtube.com" target="_blank" rel="noopener">Abrir YouTube</a></div></section>
+
+   <section class="pg" id="p-sentry"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Modo Sentinela</div>
+    <div class="body">
+     <div class="panel sw">Modo Sentinela<button id="snsw" aria-pressed="false" aria-label="Ligar ou desligar o modo sentinela"></button></div>
+     <div class="sub" id="snst"></div>
+     <div class="alertbar" id="snal" hidden><span id="snalt"></span><button id="sndis" style="text-decoration:underline;margin-left:10px">Dispensar</button></div>
+     <div class="cams" id="cams"></div>
+     <div><div class="sub" style="text-align:left;margin-bottom:6px">Sensibilidade</div><div class="seg" id="sens" style="grid-template-columns:repeat(3,1fr)"><button aria-pressed="false">Baixa</button><button aria-pressed="true">Média</button><button aria-pressed="false">Alta</button></div></div>
+     <div class="row"><button class="btn alt" id="snsim" style="flex:1">Simular evento</button><button class="btn alt" id="snclr" style="flex:1">Limpar</button></div>
+     <div class="list" id="snlog"></div>
+    </div></section>
+
+   <section class="pg" id="p-set"><div class="hd"><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button>Ajustes</div>
+    <div class="body">
+     <div class="panel"><label for="bri">Brilho da tela</label><input type="range" id="bri" min="40" max="100" value="100"></div>
+     <div class="panel"><label for="vol">Volume</label><input type="range" id="vol" min="0" max="30" value="12"></div>
+     <div class="panel"><div style="margin-bottom:8px;font-weight:600">Tema</div><div class="seg" id="thm"><button data-th="day" aria-pressed="true">Gelo</button><button data-th="night" aria-pressed="false">Noite</button></div></div>
+     <button class="btn alt" data-k="rst">Restaurar padrões</button>
+    </div></section>
+  </main>
+
+  <div class="bar">
+   <div class="col"><button data-act="home" aria-label="Início"><svg class="ic"><use href="#i-home"/></svg></button><button data-act="back" aria-label="Voltar"><svg class="ic"><use href="#i-back"/></svg></button></div>
+   <div id="btText">Bluetooth não está conectado</div>
+   <div class="col"><button class="vb" data-act="vu" aria-label="Aumentar volume"><svg class="ic"><use href="#i-vol"/></svg>+</button><button class="vb" data-act="vd" aria-label="Diminuir volume"><svg class="ic"><use href="#i-vol"/></svg>−</button></div>
+  </div>
+  <div class="toast" id="toast" hidden></div>
+  <div class="off" id="off">Toque para ligar a tela</div>
+ </div>
+
+ <div class="side" aria-label="Botões direitos">
+  <button class="pb sm" data-k="rst">RST</button>
+  <button class="pb" data-k="music">MUSIC</button>
+  <button class="pb" data-k="mode">MODE</button>
+  <button class="pb" data-k="band">BAND</button>
+  <button class="pb" data-k="sel">SEL</button>
+  <div class="knob" id="ks" role="slider" tabindex="0" aria-label="Buscar faixa ou estação (arraste, role o mouse ou clique)"></div><span class="kl">SEEK</span>
+ </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const ic=n=>`<svg class="ic"><use href="#i-${n}"/></svg>`;
+const D={vol:12,mute:false,src:"radio",play:false,band:"FM",fm:98.5,am:1010,tr:0,pos:0,bri:100,hist:["home"],saving:false,dev:"Celular de Ana",btOn:true,dial:"",call:null,sn:{on:false,sens:1,log:[]}};
+const PRE={FM:[87.9,92.5,95.1,98.5,101.7,104.9],AM:[560,640,810,1010,1230,1480]};
+const TR=[["Estrada de Domingo","Vale Azul",214],["Luzes da Serra","Coletivo Norte",187],["Asfalto Molhado","Marina Teixeira",242],["Horizonte Curto","Orquestra Lenta",205]];
+const DEVS=["Celular de Ana","Galaxy S24","iPhone de Pedro"];
+let st=JSON.parse(JSON.stringify(D)),pre=JSON.parse(JSON.stringify(PRE)),tt;
+const fx=n=>n.toFixed(1).replace(".",","),mm=n=>Math.floor(n/60)+":"+String(n%60).padStart(2,"0");
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,1400)}
+
+/* navegação entre telas */
+function show(p){$$(".pg").forEach(x=>x.classList.toggle("on",x.id==="p-"+p));if(p==="nav"&&!$("#map").src.startsWith("http"))$("#map").src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28700.813520338984!2d-48.68063194726562!3d-27.6460644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9527ad9e377f3b8d%3A0x4e1b2c62c1c4c3c!2sPalho%C3%A7a%20-%20SC!5e0!3m2!1spt-BR!2sbr!4v1731225600000!5m2!1spt-BR!2sbr"}
+function go(p){if(st.hist[st.hist.length-1]!==p)st.hist.push(p);show(p)}
+function home(){st.hist=["home"];show("home")}
+function back(){if(st.hist.length>1)st.hist.pop();show(st.hist[st.hist.length-1])}
+
+/* áudio (simulado) */
+const srcName=()=>st.src==="radio"?"Rádio "+st.band:st.src==="music"?TR[st.tr][0]:"Áudio Bluetooth";
+const srcSub=()=>st.src==="radio"?(st.band==="FM"?fx(st.fm)+" MHz":st.am+" kHz"):st.src==="music"?TR[st.tr][1]:(st.dev||"Sem dispositivo");
+function render(){
+ $("#rt").textContent=srcName();$("#rs").textContent=srcSub();
+ $$("[data-act=play]").forEach(b=>b.innerHTML=ic(st.play?"pause":"play"));
+ $("#rcard").classList.toggle("on-air",st.play);
+ const fm=st.band==="FM",f=$("#fr");f.min=fm?87.5:530;f.max=fm?108:1700;f.step=fm?.1:10;f.value=fm?st.fm:st.am;
+ $("#band").textContent=st.band;$("#freq").textContent=fm?fx(st.fm):st.am;$("#unit").textContent=fm?"MHz":"kHz";
+ $$("[data-band]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.band===st.band));
+ $("#pre").innerHTML=pre[st.band].map((v,i)=>`<button data-pi="${i}" aria-pressed="${(fm?st.fm:st.am)===v}">${fm?fx(v):v}</button>`).join("");
+ $("#mt").textContent=TR[st.tr][0];$("#ma").textContent=TR[st.tr][1];$("#mbar").style.width=st.pos/TR[st.tr][2]*100+"%";
+ $("#tl").innerHTML=TR.map((t,i)=>`<button data-ti="${i}" aria-pressed="${i===st.tr}"><span>${t[0]}</span><span>${mm(t[2])}</span></button>`).join("");
+ $("#vol").value=st.vol}
+function tune(n){if(st.band==="FM")st.fm=Math.round(Math.min(108,Math.max(87.5,st.fm+n*.1))*10)/10;else st.am=Math.min(1700,Math.max(530,st.am+n*10));st.src="radio";render()}
+function setTrack(i){st.tr=(i+TR.length)%TR.length;st.pos=0;render()}
+function seek(n){if(st.src==="radio")tune(n);else if(st.src==="music")setTrack(st.tr+n);else toast(st.dev?"Faixa do celular":"Conecte um celular")}
+function playPause(){st.play=!st.play;render();toast(st.play?"Tocando":"Pausado")}
+function setVol(n,silent){st.vol=Math.max(0,Math.min(30,n));st.mute=false;render();if(!silent)toast("Volume "+st.vol)}
+function mute(){st.mute=!st.mute;toast(st.mute?"Mudo":"Volume "+st.vol)}
+function mode(){const o=["radio","music","bt"];st.src=o[(o.indexOf(st.src)+1)%3];render();toast("Fonte: "+({radio:"Rádio",music:"Música",bt:"Bluetooth"})[st.src])}
+function band(){st.band=st.band==="FM"?"AM":"FM";st.src="radio";render();toast("Banda "+st.band)}
+setInterval(()=>{if(st.play&&st.src==="music"){st.pos++;st.pos>=TR[st.tr][2]?setTrack(st.tr+1):render()}},1000);
+
+/* bluetooth e telefone (simulados) */
+function renderBT(){
+ $("#sbBt").classList.toggle("off",!st.dev);
+ $("#btText").textContent=!st.btOn?"Bluetooth desligado":st.dev?"Conectado: "+st.dev:"Bluetooth não está conectado";
+ $("#btinfo").textContent=!st.btOn?"Ligue o Bluetooth para buscar dispositivos.":st.dev?"Conectado a "+st.dev:"Nenhum dispositivo conectado";
+ $("#dev").innerHTML=st.btOn?DEVS.map((d,i)=>`<button data-di="${i}" aria-pressed="${st.dev===d}"><span>${d}</span><span>${st.dev===d?"Conectado":""}</span></button>`).join(""):""}
+function callUI(){$("#num").textContent=st.dial;$("#cst").textContent=st.call?"Em chamada "+mm(st.call.t):st.dial?"Pronto para ligar":"Digite um número"}
+setInterval(()=>{if(st.call){st.call.t++;callUI()}},1000);
+$("#pad").innerHTML=["1","2","3","4","5","6","7","8","9","*","0","#"].map(k=>`<button data-d="${k}">${k}</button>`).join("");
+
+/* relógio */
+function clock(){const d=new Date(),h=d.getHours(),m=d.getMinutes(),s=d.getSeconds(),t=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
+ $("#sbT").textContent=$("#dig").textContent=t;
+ $("#dt").innerHTML=d.toLocaleDateString("pt-BR",{year:"numeric",month:"2-digit",day:"2-digit"}).split("/").reverse().join("/")+"<br>"+d.toLocaleDateString("pt-BR",{weekday:"long"});
+ $("#hh").setAttribute("transform",`rotate(${(h%12)*30+m/2} 50 50)`);$("#mh").setAttribute("transform",`rotate(${m*6+s/10} 50 50)`);$("#sh").setAttribute("transform",`rotate(${s*6} 50 50)`)}
+clock();setInterval(clock,1000);
+
+/* modo sentinela (simulado) */
+const CAMS=["Frente","Traseira","Esquerda","Direita"],EV=["Pessoa se aproximando","Movimento detectado","Veículo passando","Toque no veículo (vibração)"];
+let ac;function beep(){if(st.mute||!st.vol)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;g.gain.value=.02+.06*st.vol/30;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.18)}catch(e){}}
+function renderSn(){const n=st.sn;$("#snsw").setAttribute("aria-pressed",n.on);$("#sbSn").classList.toggle("on",n.on);
+ $("#snst").textContent=n.on?"Monitorando · 4 câmeras ativas":"Desligado · use o interruptor para ativar";
+ $("#cams").classList.toggle("armed",n.on);if(!n.on)$("#snal").hidden=true;
+ $$("#sens button").forEach((b,i)=>b.setAttribute("aria-pressed",i===n.sens));
+ $("#snlog").innerHTML=n.log.length?n.log.map(l=>`<div class="panel" style="padding:10px;display:flex;justify-content:space-between;gap:8px;font-size:13px"><span>${l.msg} · ${CAMS[l.cam]}</span><span style="color:var(--mute)">${l.t}</span></div>`).join(""):'<div class="sub">Nenhum evento registrado</div>'}
+function trig(msg,cam){const t=new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+ st.sn.log.unshift({t,msg,cam});st.sn.log.length=Math.min(st.sn.log.length,20);
+ $("#snalt").textContent="Alerta: "+msg+" ("+CAMS[cam]+")";$("#snal").hidden=false;
+ const c=$$(".cam")[cam];c.classList.add("alert");setTimeout(()=>c.classList.remove("alert"),3000);
+ toast("Sentinela: "+msg);beep();if(navigator.vibrate)navigator.vibrate(200);renderSn()}
+const rnd=n=>Math.floor(Math.random()*n);
+setInterval(()=>{if(st.sn.on&&Math.random()<[.08,.18,.35][st.sn.sens])trig(EV[rnd(4)],rnd(4))},4000);
+$("#cams").innerHTML=CAMS.map(n=>`<div class="cam"><em>● REC</em><span>${n}</span></div>`).join("");
+$("#snsw").onclick=()=>{st.sn.on=!st.sn.on;toast(st.sn.on?"Modo Sentinela ativado":"Modo Sentinela desativado");renderSn()};
+$("#sens").onclick=e=>{const b=e.target.closest("button");if(!b)return;st.sn.sens=[...$$("#sens button")].indexOf(b);renderSn()};
+$("#snsim").onclick=()=>st.sn.on?trig(EV[rnd(4)],rnd(4)):toast("Ative o modo Sentinela primeiro");
+$("#snclr").onclick=()=>{st.sn.log=[];renderSn()};
+$("#sndis").onclick=()=>$("#snal").hidden=true;
+
+/* ações (botões da tela e da barra) */
+const A={home,back,play:playPause,prev:()=>seek(-1),next:()=>seek(1),tm:()=>tune(-1),tp:()=>tune(1),vu:()=>setVol(st.vol+1),vd:()=>setVol(st.vol-1)};
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-act]");if(b)return A[b.dataset.act]();
+ const g=e.target.closest("[data-go]");if(g){if(g.dataset.go==="link")return toast("Conecte um celular compatível por USB");return go(g.dataset.go)}
+ const bd=e.target.closest("[data-band]");if(bd){if(st.band!==bd.dataset.band)band();return}
+ const pi=e.target.closest("[data-pi]");if(pi){const v=pre[st.band][+pi.dataset.pi];if(st.saving){st.band==="FM"?pre.FM[+pi.dataset.pi]=st.fm:pre.AM[+pi.dataset.pi]=st.am;st.saving=false;toast("Estação salva");}else{st.band==="FM"?st.fm=v:st.am=v;st.src="radio"}return render()}
+ const ti=e.target.closest("[data-ti]");if(ti){st.src="music";st.play=true;return setTrack(+ti.dataset.ti)}
+ const di=e.target.closest("[data-di]");if(di){const d=DEVS[+di.dataset.di];if(st.dev===d)return toast("Já conectado a "+d);st.dev=d;toast("Conectado a "+d);return renderBT(),render()}
+ const dg=e.target.closest("[data-d]");if(dg){if(st.dial.length<16)st.dial+=dg.dataset.d;return callUI()}
+ const th=e.target.closest("[data-th]");if(th){$$("[data-th]").forEach(x=>x.setAttribute("aria-pressed",x===th));th.dataset.th==="night"?document.documentElement.setAttribute("data-theme","night"):document.documentElement.removeAttribute("data-theme")}
+});
+$("#scan").onclick=()=>{if(!st.btOn)return toast("Ligue o Bluetooth");toast("Buscando dispositivos…");setTimeout(renderBT,900)};
+$("#call").onclick=()=>{if(!st.dial)return toast("Digite um número");if(!st.dev)return toast("Conecte um celular no Bluetooth");st.call={t:0};callUI();toast("Chamando "+st.dial)};
+$("#hang").onclick=()=>{if(st.call){st.call=null;toast("Chamada encerrada")}else{st.dial=st.dial.slice(0,-1)}callUI()};
+$("#fr").oninput=e=>{st.band==="FM"?st.fm=+e.target.value:st.am=+e.target.value;st.src="radio";render()};
+$("#save").onclick=()=>{st.saving=true;toast("Toque em uma memória para salvar")};
+$("#vol").oninput=e=>setVol(+e.target.value,true);
+$("#bri").oninput=e=>$("#screen").style.filter="brightness("+e.target.value/100+")";
+const dest=()=>{const d=$("#dest").value.trim();if(!d)return toast("Digite um destino");window.open("https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(d),"_blank","noopener")};
+$("#go").onclick=dest;$("#dest").onkeydown=e=>{if(e.key==="Enter")dest()};
+
+/* botões físicos */
+const K={menu:()=>{home();toast("Menu")},phone:()=>go("phone"),back,navi:()=>go("nav"),music:()=>{st.src="music";render();go("music")},mode,band:()=>{band();go("radio")},sel:playPause,
+ mic:()=>toast("Comando de voz indisponível"),
+ rst:()=>{const bt=st.dev;st=JSON.parse(JSON.stringify(D));pre=JSON.parse(JSON.stringify(PRE));$("#screen").style.filter="";$("#bri").value=100;document.documentElement.removeAttribute("data-theme");home();render();renderBT();callUI();renderSn();toast("Padrões restaurados")}};
+document.addEventListener("click",e=>{const k=e.target.closest("[data-k]");if(k)K[k.dataset.k]()});
+$("#pw").onclick=()=>$("#off").classList.add("on");$("#off").onclick=()=>$("#off").classList.remove("on");
+
+
+/* botões giratórios */
+function knob(el,step,click){let y0=null,moved=false,ang=0;
+ const rot=n=>{ang+=n*20;el.style.transform="rotate("+ang+"deg)"};
+ el.onpointerdown=e=>{y0=e.clientY;moved=false;el.setPointerCapture(e.pointerId)};
+ el.onpointermove=e=>{if(y0===null)return;const d=y0-e.clientY;if(Math.abs(d)>=10){const n=Math.trunc(d/10);y0=e.clientY;moved=true;rot(n);step(n)}};
+ el.onpointerup=()=>{if(y0!==null&&!moved)click();y0=null};
+ el.onwheel=e=>{e.preventDefault();const n=e.deltaY<0?1:-1;rot(n);step(n)};
+ el.onkeydown=e=>{if(e.key==="ArrowUp"||e.key==="ArrowRight"){rot(1);step(1)}else if(e.key==="ArrowDown"||e.key==="ArrowLeft"){rot(-1);step(-1)}else if(e.key==="Enter"||e.key===" "){e.preventDefault();click()}}}
+knob($("#kv"),n=>setVol(st.vol+n),mute);
+knob($("#ks"),n=>seek(n>0?1:-1),()=>seek(1));
+
+/* montagem inicial */
+const AP=[["nav","Navi","nav"],["bt","Bluetooth","bt"],["phone","Telefone","phone"],["apps","Apps","grid"],["radio","Rádio","radio"],["music","Música","music"],["video","Vídeos","video"]];
+$("#dock").innerHTML=AP.map(a=>`<button data-go="${a[0]}" class="${a[0]==="apps"?"mid":""}"><span class="bub">${ic(a[2])}</span>${a[1]}</button>`).join("");
+$("#appgrid").innerHTML=[...AP.filter(a=>a[0]!=="apps"),["sentry","Sentinela","eye"],["set","Ajustes","set"],["link","Link","phone"]].map(a=>`<button data-go="${a[0]}"><span class="bub">${ic(a[2])}</span>${a[1]}</button>`).join("");
+$("#wcol").innerHTML=[["nav","Mapas","nav"],["sentry","Sentinela","eye"],["set","Ajustes","set"]].map(a=>`<button data-go="${a[0]}">${ic(a[2])}${a[1]}</button>`).join("");
+render();renderBT();callUI();renderSn();
+</script>
+</body>
+</html>
